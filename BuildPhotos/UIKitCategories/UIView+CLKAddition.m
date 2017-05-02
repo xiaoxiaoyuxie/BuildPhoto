@@ -292,6 +292,17 @@ static char kDTActionHandlerLongPressGestureKey;
     
     free(properties);
 }
+- (UIViewController *)getViewController
+{
+    UIResponder *responder = self;
+    while (![responder isKindOfClass:[UIViewController class]]) {
+        responder = [responder nextResponder];
+        if (nil == responder) {
+            return nil;
+        }
+    }
+    return (UIViewController *)responder;
+}
 
 - (void)removeAllSubviews {
     while (self.subviews.count) {

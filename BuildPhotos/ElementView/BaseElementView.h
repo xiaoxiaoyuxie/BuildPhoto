@@ -21,8 +21,11 @@ typedef NS_ENUM(NSInteger ,ShowType) {
 
 @interface BaseElementView : UIView <UIGestureRecognizerDelegate>
 @property (nonatomic,assign)ShowType type;
+@property (nonatomic,assign)CGFloat padding;
+@property (nonatomic,assign)CGFloat radius;
 @property (nonatomic,assign)BOOL canPan;
 @property (nonatomic,strong)UIImageView *backView;
 + (CGSize)getSizeWithType:(ShowType)type;
--(void)zoomAnimation;
+-(void)zoomInAnimation;
+-(void)zoomOutAnimation;
 @end

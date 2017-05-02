@@ -33,4 +33,5 @@
  */
 + (UIImage *)imageForPNGNocacheWithName:(NSString *)name;
 
++(UIImage *)scaleImage:(UIImage *)image toScale:(float)scaleSize;
 @end

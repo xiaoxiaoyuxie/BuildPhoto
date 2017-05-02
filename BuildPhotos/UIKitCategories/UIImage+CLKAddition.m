@@ -60,5 +60,17 @@
     NSData *data = [NSData dataWithContentsOfFile:imagePath];
     return [UIImage imageWithData:data scale:[UIScreen mainScreen].scale];
 }
-
++(UIImage *)scaleImage:(UIImage *)image toScale:(float)scaleSize
+{
+    //设置图片尺寸
+    UIGraphicsBeginImageContext(CGSizeMake(image.size.width*scaleSize,image.size.height*scaleSize));
+    [image drawInRect:CGRectMake(0, 0, image.size.width * scaleSize, image.size.height *scaleSize)];
+    UIImage *scaledImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    //对图片包得大小进行压缩
+    NSData *imageData = UIImageJPEGRepresentation(scaledImage,0.0001);
+    UIImage *m_selectImage = [UIImage imageWithData:imageData];
+    return m_selectImage;
+}
 @end

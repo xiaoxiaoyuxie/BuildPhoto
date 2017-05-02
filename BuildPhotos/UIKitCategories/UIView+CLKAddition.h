@@ -124,6 +124,8 @@
  *  使用runtime初始化所有子view
  */
 - (void)initAllSubView;
+
+- (UIViewController *)getViewController;
 /**
  * Removes all subviews.
  */

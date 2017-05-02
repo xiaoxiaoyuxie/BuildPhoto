@@ -10,5 +10,7 @@
 #import "BaseElementView.h"
 
 @interface DefaultElement : BaseElementView
-@property (nonatomic,assign)CGFloat padding;
+
+@property (nonatomic,strong)UIScrollView *backScrollView;
+
 @end

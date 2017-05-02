@@ -10,8 +10,8 @@
 #import "DefaultElement.h"
 #import "SepecialElement.h"
 #import "UIView+CLKAddition.h"
+#import "UIImage+CLKAddition.h"
 #import "ViewInfo.h"
-#define kSubViewTag 1000
 
 @implementation MainView
 {
@@ -41,11 +41,14 @@
         _paddingColor=color;
         _viewArray=[NSMutableArray array];
         _mainView=[[DefaultElement alloc] init];
-        self.clipsToBounds=YES;
-        [self getTypesArray];
+        
         _panBoundsView=[[UIView alloc] init];
         _panBoundsView.backgroundColor=[UIColor clearColor];
         [self addSubview:_panBoundsView];
+        
+        self.clipsToBounds=YES;
+        [self getTypesArray];
+        
 
     }
     return self;
@@ -54,7 +57,7 @@
 {
     return YES;
 }
--(void)setPanType:(BOOL)canPan view:(BaseElementView*)tapView
+-(void)setPanType:(BOOL)canPan view:(DefaultElement*)tapView
 {
     _tapView=tapView;
     if (canPan) {
@@ -62,6 +65,7 @@
         _panBoundsView.layer.borderWidth=3;
         _panBoundsView.frame=tapView.frame;
         [self bringSubviewToFront:_panBoundsView];
+        tapView.backScrollView.scrollEnabled=NO;
     }else
     {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{ //为了等动画结束
@@ -69,6 +73,7 @@
             _panBoundsView.layer.borderWidth=0;
             _panBoundsView.frame=CGRectMake(0, 0, 0, 0);
         });
+        tapView.backScrollView.scrollEnabled=YES;
     }
 }
 -(void)viewPaning:(UIPanGestureRecognizer*)pan{
@@ -91,16 +96,24 @@
         case UIGestureRecognizerStateEnded:
         {
             for (DefaultElement *view in _viewArray) {
-                if (CGRectContainsPoint(view.frame, _panBoundsView.center)&&view!=_tapView) {
+                if (CGRectContainsPoint(view.frame, _panBoundsView.center)&&_tapView&&view!=_tapView) {
                     [UIView animateWithDuration:0.2 animations:^{
                         _panBoundsView.frame=view.frame;
+                        ShowType tempType=view.type;
                         _endPoint=view.origin;
                         view.frame=_tapView.frame;
+                        view.type=_tapView.type;
+                        [view layoutSubviews];
                         _tapView.frame=_panBoundsView.frame;
+                        _tapView.type=tempType;
+                        [_tapView layoutSubviews];
+                        [_tapView zoomInAnimation];
+                        [view zoomOutAnimation];
                     }];
                     return;
                 }
             }
+            _tapView=nil;
             [UIView animateWithDuration:0.2 animations:^{
                 _panBoundsView.origin=_startPoint;
             }];
@@ -204,11 +217,12 @@
         }
         
         UIImage *image=[UIImage imageNamed:[NSString stringWithFormat:@"%d",i+1]];
+        image=[UIImage scaleImage:image toScale:0.4];  //图片压缩
         view.backView.image=image;
         view.padding=self.padding;
-        view.backView.layer.cornerRadius=self.radius;
+        view.radius=self.radius;
         view.backView.clipsToBounds=YES;
-        [view zoomAnimation];
+        [view zoomInAnimation];
     }
     [UIView commitAnimations];
     self.width=maxWidth;

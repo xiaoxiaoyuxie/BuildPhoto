@@ -33,7 +33,8 @@
     UIBarButtonItem *bar4=[[UIBarButtonItem alloc] initWithTitle:@"颜色" style:UIBarButtonItemStyleDone target:self action:@selector(reSetColor)];
     UIBarButtonItem *bar5=[[UIBarButtonItem alloc] initWithTitle:@"数量" style:UIBarButtonItemStyleDone target:self action:@selector(reSetImageNumber)];
     UIBarButtonItem *bar6=[[UIBarButtonItem alloc] initWithTitle:@"宽窄" style:UIBarButtonItemStyleDone target:self action:@selector(reMainType)];
-    [self.navigationItem setRightBarButtonItems:@[bar0,bar1,bar2,bar3,bar4,bar5,bar6]];
+    UIBarButtonItem *bar7=[[UIBarButtonItem alloc] initWithTitle:@"保存" style:UIBarButtonItemStyleDone target:self action:@selector(saveImage)];
+    [self.navigationItem setRightBarButtonItems:@[bar0,bar1,bar2,bar3,bar4,bar5,bar6,bar7]];
     
 }
 - (void)statusBarOrientationChange:(NSNotification *)notification{
@@ -96,6 +97,37 @@
 {
     _mainView.mainType=_mainView.mainType?SquareType:RectangleType;
     [self viewWillLayoutSubviews];
+}
+- (void)saveImage
+{
+    UIGraphicsBeginImageContextWithOptions(_mainView.frame.size, NO, [UIScreen mainScreen].scale);
+    [_mainView.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    void* contextInfo = NULL;
+    UIImageWriteToSavedPhotosAlbum(image, self,@selector(image:didFinishSavingWithError:contextInfo:),contextInfo);
+}
+- (void)image: (UIImage *) image didFinishSavingWithError: (NSError *) error contextInfo: (void *) contextInfo{
+    if(error != NULL){
+        // 保存图片失败
+#pragma clang diagnostic push
+        
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        UIAlertView *alertView=[[UIAlertView alloc] initWithTitle:@"保存失败" message:error.description delegate:self cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
+        [alertView show];
+#pragma clang diagnostic pop
+    }else{
+        // 保存图片成功
+#pragma clang diagnostic push
+        
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        UIAlertView *alertView=[[UIAlertView alloc] initWithTitle:@"保存成功" message:@"您可到相册查看" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
+        [alertView show];
+#pragma clang diagnostic pop
+    }
+
+    
 }
 -(void)viewWillLayoutSubviews
 {

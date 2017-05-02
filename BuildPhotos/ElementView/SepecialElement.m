@@ -7,6 +7,7 @@
 //
 
 #import "SepecialElement.h"
+#import "UIView+CLKAddition.h"
 
 @implementation SepecialElement
 
@@ -26,9 +27,18 @@
     }
     return self;
 }
+-(void)setPadding:(CGFloat)padding
+{
+    [super setPadding:padding];
+    self.backView.left=padding;
+    self.backView.top=padding;
+    self.backView.width=self.width-padding*2;
+    self.backView.height=self.height-padding*2;
+}
 -(void)layoutSubviews
 {
     [super layoutSubviews];
-    self.backView.frame=self.bounds;
+    self.backView.bounds=self.bounds;
+    self.padding=self.padding;
 }
 @end
