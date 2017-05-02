@@ -18,6 +18,7 @@
     NSMutableArray *_viewArray;
     NSMutableArray *_showTypesArray;
     NSMutableArray *_subShowTypeArray;
+    NSMutableArray *_imageArray;
     int _showTypeIndex;
     DefaultElement *_mainView;
     int _spliteType;
@@ -47,9 +48,16 @@
         [self addSubview:_panBoundsView];
         
         self.clipsToBounds=YES;
-        [self getTypesArray];
         
-
+        _imageArray=[NSMutableArray array];
+        for (int i=0; i<12; i++) {
+            UIImage *image=[UIImage imageNamed:[NSString stringWithFormat:@"%d",i+1]];
+            image=[UIImage scaleImage:image toScale:0.4];  //图片压缩
+            [_imageArray addObject:image];
+        }
+        
+        
+        [self getTypesArray];
     }
     return self;
 }
@@ -216,9 +224,8 @@
             }
         }
         
-        UIImage *image=[UIImage imageNamed:[NSString stringWithFormat:@"%d",i+1]];
-        image=[UIImage scaleImage:image toScale:0.4];  //图片压缩
-        view.backView.image=image;
+        
+        view.backView.image=_imageArray[i];
         view.padding=self.padding;
         view.radius=self.radius;
         view.backView.clipsToBounds=YES;

@@ -65,7 +65,6 @@
             self.backView.height=self.backScrollView.height;
         }else
         {
-            
             self.backView.height=(self.backView.height*self.backScrollView.width)/self.backView.width;
             self.backView.width=self.backScrollView.width;
         }
