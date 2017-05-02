@@ -28,6 +28,8 @@
         UIPanGestureRecognizer *pan=[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(viewPaning:)];
         pan.delegate=self;
         [self addGestureRecognizer:pan];
+        UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)];
+        [self addGestureRecognizer:tap];
     }
     return self;
 }
@@ -39,6 +41,11 @@
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
     return YES;
+}
+- (void)tapAction:(UITapGestureRecognizer *)tap{
+    NSLog(@"点击方块");
+    [self.superview bringSubviewToFront:tap.view];
+    [self zoomAnimation];
 }
 -(void)viewPaning:(UIPanGestureRecognizer*)pan{ //将拖动手势转移到父视图,因为本视图并不移动,真正移动的是父视图的选择框
     MainView *view=(MainView*)self.superview;
